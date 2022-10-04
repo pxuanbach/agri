@@ -1,0 +1,13 @@
+Deployment:
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "deploy-heroku"'
+  image: ruby:2.7
+  stage: deploy
+  before_script:
+    - gem install dpl
+    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+  script:
+    - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY --run='alembic upgrade head'
+  environment:
+    name: production
+    url: https://$HEROKU_APP_NAME.herokuapp.com

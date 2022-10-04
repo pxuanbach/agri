@@ -1,0 +1,186 @@
+[33m47518e1[m[33m ([m[1;36mHEAD -> [m[1;32mdev[m[33m, [m[1;31morigin/media-model[m[33m, [m[1;31morigin/dev[m[33m, [m[1;32mmedia-model[m[33m)[m Merge branch 'dev' into media-model
+[33mecc4f06[m commit all
+[33m501cd9a[m Merge branch 'staff_management' into 'dev'
+[33m02410a8[m[33m ([m[1;31morigin/staff_management[m[33m)[m Designer profile add infor
+[33m1da1b6b[m Filter by membership_plan for business_profile
+[33m08e2d80[m Merge branch 'dev' into staff_management
+[33m4bb56d7[m Staff management
+[33m6cd2e20[m Fix get designer profile, get all members logic
+[33m7ccd6d2[m desginer profile tags
+[33m9dd43f3[m Merge branch 'feature/business_profile_list' into 'dev'
+[33m4637890[m[33m ([m[1;31morigin/feature/business_profile_list[m[33m, [m[1;32mfeature/business_profile_list[m[33m)[m Add is_deleted filter
+[33m69f2402[m Description API
+[33mb4c5436[m Merge branch 'dev' into feature/business_profile_list
+[33me700d76[m Merge branch 'is_deleted' into 'dev'
+[33m31aa488[m[33m ([m[1;31morigin/is_deleted[m[33m, [m[1;32mis_deleted[m[33m)[m add is_deleted field
+[33mb498e0f[m Merge branch 'dev' into feature/business_profile_list
+[33m13904ec[m Update all members status, add business field for api
+[33m2084f3b[m Merge branch 'announcement-model' into 'dev'
+[33m9df38ad[m[33m ([m[1;31morigin/announcement-model[m[33m, [m[1;32mannouncement-model[m[33m)[m Announcements model
+[33m681cecb[m Merge branch 'dev' into feature/business_profile_list
+[33m1261462[m background task send mail, adjust update status users
+[33mc000f6e[m Merge branch 'business-group' into 'dev'
+[33mb645e01[m[33m ([m[1;31morigin/business-group[m[33m, [m[1;32mbusiness-group[m[33m)[m Add business group field
+[33md44556b[m update status user
+[33m0461e68[m Merge branch 'dev' into feature/business_profile_list
+[33m27db367[m update user status
+[33m32fab22[m[33m ([m[1;32muser-deactivate[m[33m)[m fixbug member status
+[33ma9c2a04[m pagination, filter, search business profile list
+[33mad9037b[m fix bug login
+[33mf8a9f1a[m .
+[33m9f6776b[m designer profile
+[33mcad5a45[m Merge branch 'firebase' into dev
+[33mf622b23[m .
+[33m49087b3[m ALLOW_MARK_APP_LOGIN_SLUGS
+[33m6bb2408[m token fields
+[33m0e3d895[m token field
+[33mcd2d798[m prefix forgot password router
+[33m52c4d43[m Merge branch 'feature/trigger-emails' into 'dev'
+[33mdc46c57[m config fcm
+[33m468fb0e[m[33m ([m[1;31morigin/feature/trigger-emails[m[33m)[m Merge branch 'dev' into feature/trigger-emails
+[33m6ae0bc6[m email templates
+[33m08c3e3d[m Merge branch 'feature/trigger-emails' into 'dev'
+[33m973b6e5[m Merge branch 'feature/reset-password' into feature/trigger-emails
+[33m76db3f3[m Merge branch 'dev' into feature/trigger-emails
+[33m08d1fc9[m[33m ([m[1;31morigin/feature/reset-password[m[33m)[m Merge branch 'dev' into feature/reset-password
+[33me9a8c6d[m Trigger email, update status member
+[33m10d6c76[m year_of_incorporation
+[33m56ba8f7[m init user
+[33m4a6fe0f[m Merge branch 'project-schema' into 'dev'
+[33m9d3be46[m[33m ([m[1;31morigin/project-schema[m[33m, [m[1;32mproject-schema[m[33m)[m project schema
+[33m1f5f8a7[m Merge branch 'dev' of gitlab.com:tisoha/mark-be into dev
+[33m13565cc[m me api
+[33meecaf25[m Implement forgot-password
+[33m9bc2ea2[m Merge branch 'fix/pagination-verify' into 'dev'
+[33mdb3fa7f[m Change schema UserCreate, UserDB
+[33m86e4e91[m[33m ([m[1;31morigin/fix/pagination-verify[m[33m)[m Change schema UserCreate, UserDB
+[33m8f2e36c[m[33m ([m[1;31morigin/fix/filter_search[m[33m)[m Change page_total logic
+[33m39e5449[m status field
+[33ma856867[m Merge branch 'feature/pagination-designer_profile' into 'dev'
+[33mf56d8c6[m[33m ([m[1;31morigin/feature/pagination-designer_profile[m[33m, [m[1;32mfeature/pagination-designer_profile[m[33m)[m Merge branch 'dev' into feature/pagination-designer_profile
+[33m6f6fe16[m Get designer profile
+[33m29d74d2[m membership plan
+[33m2c6a9cf[m membership plan
+[33m4ced464[m Add phone field
+[33m9360c4b[m Merge branch 'dev' into feature/pagination-designer_profile
+[33mc9c17e2[m Designer profile & attribute
+[33mab6dd2b[m Merge branch 'change-password' into 'dev'
+[33m0c48601[m[33m ([m[1;31morigin/change-password[m[33m, [m[1;32mchange-password[m[33m)[m change password
+[33m7f7051f[m BACKEND_CORS_ORIGINS
+[33m9a42756[m BACKEND_CORS_ORIGINS
+[33m567e061[m init sql
+[33m724aeaa[m business profile name
+[33m4f45b07[m Add business name
+[33m4dd96bd[m business profile logo
+[33m902d9e0[m Merge branch 'dev' into feature/pagination-designer_profile
+[33m0b879b3[m Create migrate, models, crud designer profile
+[33m5ba4f79[m add status
+[33m9894510[m Pagination
+[33m7835a07[m[33m ([m[1;32mupdate-user-status[m[33m, [m[1;32mreset-password[m[33m)[m remove media temp
+[33m03eaec0[m Merge branch 'business-profile-media' into 'dev'
+[33m15954cb[m[33m ([m[1;31morigin/business-profile-media[m[33m)[m upload media
+[33m7c8043f[m Merge branch 'features/filter_search' into 'dev'
+[33mf4b4171[m update business profile schema
+[33m13541e9[m[33m ([m[1;31morigin/features/filter_search[m[33m, [m[1;32mfeatures/filter_search[m[33m)[m Adjust permission
+[33m4709b6b[m Merge branch 'dev' into features/filter_search
+[33m96342c5[m Implement filter search, get/create list designer
+[33m5bdb79c[m .
+[33m79b66ed[m business profile
+[33m70ef51d[m business profile detail
+[33m35e24fc[m Merge branch 'dev' into features/filter_search
+[33mdd22656[m Query with operator for created, updated
+[33mc8451fd[m business profile full_name
+[33mf8dff98[m Add created query
+[33m8146628[m gitignore
+[33m128fcd4[m fix bug media upload
+[33mdc1a99d[m Filter, search director
+[33m437f1da[m ALLOW_MARK_APP_LOGIN_SLUGS
+[33mc9b948d[m Add User Schema
+[33mc29f769[m Merge branch 'admin-director' into 'dev'
+[33m2436a8c[m Merge branch 'dev' into 'admin-director'
+[33m54fdb77[m admin director management
+[33m2127905[m Merge branch 'send_mail_temp_access_director' into 'dev'
+[33m8b3a2c9[m Merge branch 'dev' into 'send_mail_temp_access_director'
+[33m6ac6c77[m[33m ([m[1;31morigin/send_mail_temp_access_director[m[33m)[m Random password per access director
+[33mcee6e5c[m Merge branch 'business' into 'dev'
+[33m6cfb3db[m[33m ([m[1;31morigin/business[m[33m, [m[1;32mbusiness[m[33m)[m membership plan
+[33mf1c5272[m Merge branch 'dev' into send_mail_temp_access_director
+[33m22a744a[m Create list access directors
+[33m1a7fa4c[m Merge branch 'feature/update-login-markapp' into 'dev'
+[33me028aeb[m[33m ([m[1;31morigin/feature/update-login-markapp[m[33m)[m Add user register-login test file
+[33m0cbb926[m Check user type when login by app
+[33m471b116[m Merge branch 'dev' into send_mail_temp_access_director
+[33m83b7ce0[m Triggered email bussiness profile, designer
+[33ma7654d4[m gitignore static file
+[33m8e6072a[m upload media and update avatar
+[33ma97650a[m Send mail temp password access director
+[33m6aee44a[m[33m ([m[1;31morigin/user_type_permission[m[33m)[m Config send email
+[33m1ec947d[m Merge branch 'dev' into user_type_permission
+[33mb3c2c7c[m Prepare for send mail director
+[33md8c16bb[m Email template
+[33mb7df1ff[m Merge branch 'designer' into 'dev'
+[33me66de69[m[33m ([m[1;31morigin/designer[m[33m, [m[1;32mdesigner[m[33m)[m designer
+[33m907be8e[m Merge branch 'feature/user/register' into 'dev'
+[33mccdef8f[m Merge branch 'dev' into 'feature/user/register'
+[33m8b304df[m[33m ([m[1;31morigin/feature/user/register[m[33m, [m[1;32mfeature/user/register[m[33m)[m Only allow normal user and admin director to register
+[33m870f358[m Merge branch 'user_type_permission' into 'dev'
+[33m3c87ac6[m[33m ([m[1;32muser_type_permission[m[33m)[m Create, delete user_type_permission
+[33m836c85d[m Add api for register user
+[33m9044279[m Merge branch 'business_profile' into 'dev'
+[33meb1f911[m Merge branch 'dev' into 'business_profile'
+[33m82c80b2[m[33m ([m[1;31morigin/business_profile[m[33m, [m[1;32mbusiness_profile[m[33m)[m business profile
+[33m6950bbb[m Merge branch 'list_user_categories/types' into 'dev'
+[33m0f717e1[m[33m ([m[1;31morigin/list_user_categories/types[m[33m)[m Get by slug
+[33mfe27cbe[m Get list user_categories/types
+[33mfe39070[m Merge branch 'permissions' into 'dev'
+[33m5cf4d85[m business api
+[33mea958bb[m[33m ([m[1;31morigin/permissions[m[33m)[m user_type, permission API permission
+[33m36872e5[m Merge branch 'dev' into permissions
+[33m3d1166e[m user category permission
+[33mb8be9f0[m Merge branch 'dev' into permissions
+[33m4edf750[m Update permissions
+[33m9d16ca0[m update authz funtion
+[33mf4c954f[m[33m ([m[1;32mbusiness-profile[m[33m)[m business migrate
+[33md775494[m add business profile schema
+[33macf8ccb[m Auto scan api
+[33m8f30490[m Merge branch 'dev' into permissions
+[33m0df4d48[m Delete permission
+[33m98a79a5[m Merge branch 'authz' into 'dev'
+[33m0f40541[m[33m ([m[1;31morigin/authz[m[33m, [m[1;32mauthz[m[33m)[m Authorize
+[33m402ed4e[m Create, read permissions
+[33m351c909[m Merge branch 'user_types' into 'dev'
+[33m4a8ad26[m add is_verified
+[33m55ef743[m[33m ([m[1;31morigin/user_types[m[33m, [m[1;32muser_types[m[33m)[m Merge branch 'dev' into user_types
+[33m495c8cd[m Update user_types
+[33m7d5eeb7[m Readme
+[33ma47c2a6[m Add create super user script
+[33m660e757[m remove migration uuid
+[33m1cd0535[m Migration
+[33m7ad173f[m access director
+[33m38b35cd[m Delete user_types api, test api
+[33m28055ec[m Test case for user_categories, user_types
+[33m84eef5e[m Merge branch 'dev' into user_types
+[33m7aa4312[m Test create user_types, adjust test user_categories
+[33m96ae5d3[m super user testcase
+[33m7b985ce[m super user testcase
+[33m9a30742[m[33m ([m[1;32mswitch-sync-db[m[33m)[m add crud services
+[33m1d8c4c5[m Add crud service
+[33mb04cf7d[m Create user_types API
+[33mcfcf9a0[m Merge branch 'user_categories' into 'dev'
+[33m0a3389b[m Change permissions for API
+[33m31274ad[m Merge branch 'user_categories' into 'dev'
+[33m0d9545e[m Merge branch 'dev' into user_categories
+[33m923725a[m send email until
+[33mf7f6c42[m Write test for user_categories management API
+[33ma7462be[m Merge branch 'dev' into user_categories
+[33m63025a6[m Update and delete user_categories
+[33m47acb73[m change user_id from string to uuid type
+[33m8811541[m remove items model
+[33m95ddf20[m update user type rel model
+[33m5d65b9f[m Update user_categories
+[33m8426190[m[33m ([m[1;31morigin/user_categories[m[33m)[m Create user_categories
+[33mb4c8460[m Add schema v2 - Account
+[33m42086e0[m update fastapi core
+[33m379103e[m Update project structure
+[33m37f3b33[m Init fastapi base
+[33m4eaf559[m Initial commit

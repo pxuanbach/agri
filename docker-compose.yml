@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:12
+    restart: always
+    env_file:
+      - .env
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 3s
+      timeout: 2s
+      retries: 3
+
+  backend:
+    build:
+      context: ""
+    ports:
+      - "9000:9000"
+    env_file: .env
+    volumes:
+      - .:/app:delegated
+      - root-home:/root:delegated 
+    environment:
+      - SERVER_HOST=http://${DOMAIN?Variable not set}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: uvicorn --port 9000 --host 0.0.0.0 --reload main:app
+  # frontend:
+  #   build:
+  #     context: frontend
+  #   ports:
+  #     - "3000:80"
+  #   volumes:
+  #     - ./frontend:/app:delegated
+  #   environment:
+  #     - NODE_ENV=production
+
+volumes:
+  app-db-data:
+  root-home:

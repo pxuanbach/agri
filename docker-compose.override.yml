@@ -1,0 +1,10 @@
+# We specify volumes in override.yml, because volumes don't work well in a
+# docker-in-docker setup (the paths of parent host rarely match the nested containers)
+version: "3.9"
+
+services:
+  postgres:
+    ports:
+      - "5430:5430"
+    volumes:
+      - app-db-data:/var/lib/postgresql/data:cached
