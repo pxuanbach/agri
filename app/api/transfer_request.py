@@ -328,9 +328,14 @@ async def update_transfer_request_by_id(
             # Send notification to seller and buyer
             background_tasks.add_task(
                 _firebase.send_to_topics,
-                title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_DENIED,
-                body=f"Sản phẩm {product.name} đã bị từ chối",
-                data={"event": "denied_transfer_request", "product_id": str(product.id), "to_user_id": str(transfer_request.transfer_to_user_id), "from_user_id": str(transfer_request.transfer_from_user_id)},
+                title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_CANCELED,
+                body=f"Yêu cầu tới sản phẩm {product.name} đã được hủy",
+                data={
+                    "event": "denied_transfer_request", 
+                    "product_id": str(product.id), 
+                    "to_user_id": str(transfer_request.transfer_to_user_id), 
+                    "from_user_id": str(transfer_request.transfer_from_user_id)
+                },
                 topics=[f"user_{transfer_request.transfer_from_user_id}", f"user_{transfer_request.transfer_to_user_id}"],
                 imageUrl=first_image_path,
             )
