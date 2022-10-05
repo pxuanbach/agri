@@ -277,14 +277,14 @@ async def update_me(
         # Subscribe topic
         try:
             topics = get_topics_by_role(user)
-            if user.firebase_register_token:
+            if user_mana.firebase_register_token:
                 background_tasks.add_task(
                     _firebase.subscribe,
-                    tokens=[user.firebase_register_token], 
+                    tokens=[user_mana.firebase_register_token], 
                     topics=topics,
                 )
-        except:
-            pass
+        except Exception as e:
+            print("ERROR", str(e))
 
         return user_mana
     except InvalidPasswordException as e:

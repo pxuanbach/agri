@@ -11,6 +11,7 @@ from app.core.config import settings
 from app.core.logger import logger
 from app.deps.users import fastapi_users, jwt_authentication, member_authentication
 
+import firebase_admin
 
 def create_app():
     description = f"{settings.PROJECT_NAME} API"
@@ -22,6 +23,7 @@ def create_app():
         redoc_url=None,
     )
     setup_routers(app)
+    init_firebase()
     init_db_hooks(app)
     setup_cors_middleware(app)
     serve_static_app(app)
@@ -104,6 +106,9 @@ def use_route_names_as_operation_ids(app: FastAPI) -> None:
             route.operation_id = route.name
             route_names.add(route.name)
 
+def init_firebase():
+    firebase_cred = firebase_admin.credentials.Certificate(settings.FIREBASE_CERT)
+    firebase_admin.initialize_app(firebase_cred)
 
 def init_db_hooks(app: FastAPI) -> None:
     from app.db import database

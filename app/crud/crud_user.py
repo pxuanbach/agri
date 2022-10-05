@@ -167,6 +167,7 @@ class CRUDUser(CRUDBase[User,UserCreate,UserUpdate]
                 User.address,
                 User.email,
                 User.dob,
+                User.firebase_register_token,
                 User.avatar_id,
                 User.created_by,
                 User.deleted_at, 

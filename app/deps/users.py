@@ -200,14 +200,14 @@ class UserManager(BaseUserManager[UserCreate, UserDB]):
         db.commit()
         return user
 
-def get_topics_by_role(user: User) -> List[str]:
+def get_topics_by_role(user: UserModel) -> List[str]:
     db = SessionLocal()
     result = db.execute(
         select(
             Role.key
         )
-        .filter(User.role_id == Role.id)
-        .filter(User.id == user.id)
+        .filter(UserModel.role_id == Role.id)
+        .filter(UserModel.id == user.id)
     )
     role = result.scalars().first()
 

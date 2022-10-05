@@ -10,6 +10,7 @@ class BaseUserField(models.BaseUser):
     name: Optional[str] = None
     dob: Optional[datetime] = None
     address: Optional[str] = None
+    firebase_register_token: Optional[str] = None
 
 
 class User(BaseUserField):

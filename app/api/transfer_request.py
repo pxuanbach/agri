@@ -125,8 +125,13 @@ async def create_transfer_request(
     background_tasks.add_task(
         _firebase.send_to_topics,
         title=msg.YOU_HAVE_CREATED_A_NEW_TRANSFER_REQUEST,
-        body=f"you have created a new transfer request for product {product.name}",
-        data={"event": "add_transfer_request", "product_id": str(product.id), "to_user_id": str(transfer_request_in.transfer_to_user_id), "from_user_id": str(transfer_request_in.transfer_from_user_id)},
+        body=f"Bạn đã tạo một yêu cầu cho sản phẩm {product.name}",
+        data={
+            "event": "add_transfer_request", 
+            "product_id": str(product.id), 
+            "to_user_id": str(transfer_request_in.transfer_to_user_id), 
+            "from_user_id": str(transfer_request_in.transfer_from_user_id)
+        },
         topics=[f"user_{transfer_request_in.transfer_to_user_id}"],
         imageUrl=first_image_path,
     )
@@ -135,8 +140,13 @@ async def create_transfer_request(
     background_tasks.add_task(
         _firebase.send_to_topics,
         title=msg.YOU_HAVE_A_NEW_TRANSFER_REQUEST,
-        body=f"Product {product.name} has been requested for transfer",
-        data={"event": "receive_transfer_request", "product_id": str(product.id), "to_user_id": str(transfer_request_in.transfer_to_user_id), "from_user_id": str(transfer_request_in.transfer_from_user_id)},
+        body=f"Sản phẩm {product.name} được yêu cầu",
+        data={
+            "event": "receive_transfer_request", 
+            "product_id": str(product.id), 
+            "to_user_id": str(transfer_request_in.transfer_to_user_id), 
+            "from_user_id": str(transfer_request_in.transfer_from_user_id)
+        },
         topics=[f"user_{transfer_request_in.transfer_from_user_id}"],
         imageUrl=first_image_path,
     )
@@ -263,8 +273,12 @@ async def update_transfer_request_by_id(
             background_tasks.add_task(
                 _firebase.send_to_topics,
                 title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_DENIED,
-                body=f"Product {product.name} has been denied",
-                data={"event": "denied_transfer_request", "product_id": str(product.id), "from_user_id": str(transfer_request.transfer_from_user_id)},
+                body=f"Sản phẩm {product.name} đã bị từ chối",
+                data={
+                    "event": "denied_transfer_request", 
+                    "product_id": str(product.id), 
+                    "from_user_id": str(transfer_request.transfer_from_user_id)
+                },
                 topics=topics,
                 imageUrl=first_image_path,
             )
@@ -273,8 +287,13 @@ async def update_transfer_request_by_id(
             background_tasks.add_task(
                 _firebase.send_to_topics,
                 title=msg.YOU_HAVE_ACCEPTED_A_TRANSFER_REQUEST,
-                body=f"Product {product.name} has been successfully transfered",
-                data={"event": "accepted_transfer_request", "product_id": str(product.id), "to_user_id": str(transfer_request.transfer_to_user_id), "from_user_id": str(transfer_request.transfer_from_user_id)},
+                body=f"Sản phẩm {product.name} đã được chuyển giao",
+                data={
+                    "event": "accepted_transfer_request", 
+                    "product_id": str(product.id), 
+                    "to_user_id": str(transfer_request.transfer_to_user_id), 
+                    "from_user_id": str(transfer_request.transfer_from_user_id)
+                },
                 topics=[f"user_{transfer_request.transfer_from_user_id}"],
                 imageUrl=first_image_path,
             )
@@ -283,8 +302,13 @@ async def update_transfer_request_by_id(
             background_tasks.add_task(
                 _firebase.send_to_topics,
                 title=msg.YOUR_TRANSFER_REQUEST_HAVE_BEEN_ACCEPTED,
-                body=f"Product {product.name} has been successfully transfered",
-                data={"event": "accepted_transfer_request", "product_id": str(product.id), "to_user_id": str(transfer_request.transfer_to_user_id), "from_user_id": str(transfer_request.transfer_from_user_id)},
+                body=f"Sản phẩm {product.name} đã được chuyển giao",
+                data={
+                    "event": "accepted_transfer_request", 
+                    "product_id": str(product.id), 
+                    "to_user_id": str(transfer_request.transfer_to_user_id), 
+                    "from_user_id": str(transfer_request.transfer_from_user_id)
+                },
                 topics=[f"user_{transfer_request.transfer_to_user_id}"],
                 imageUrl=first_image_path,
             )
@@ -305,7 +329,7 @@ async def update_transfer_request_by_id(
             background_tasks.add_task(
                 _firebase.send_to_topics,
                 title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_DENIED,
-                body=f"Product {product.name} has been denied",
+                body=f"Sản phẩm {product.name} đã bị từ chối",
                 data={"event": "denied_transfer_request", "product_id": str(product.id), "to_user_id": str(transfer_request.transfer_to_user_id), "from_user_id": str(transfer_request.transfer_from_user_id)},
                 topics=[f"user_{transfer_request.transfer_from_user_id}", f"user_{transfer_request.transfer_to_user_id}"],
                 imageUrl=first_image_path,

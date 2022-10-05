@@ -77,6 +77,9 @@ class CRUDProductHistory(CRUDBase[ProductHistory, ProductHistoryCreate, ProductH
                     seller.dob.label('seller_dob'),
                     seller.avatar_id.label('seller_avatar_id'),
                 )
+                .offset(request_params.skip)
+                .limit(request_params.limit)
+                .order_by(request_params.order_by)
                 .filter(buyer.id == ProductHistory.transfer_to_user_id)
                 .filter(seller.id == ProductHistory.transfer_from_user_id)
                 .filter(Products.id == ProductHistory.product_id)
