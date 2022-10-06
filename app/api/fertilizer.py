@@ -45,7 +45,13 @@ async def get_list_fertilizers(
     responses = []
     for fertilizer in fertilizers:
         response = {**fertilizer}
-        response.update({"resources": await crud.fertilizer.get_resources(session, fertilizer.Fertilizers.id, resource_type.TREE)})
+        response.update(
+            {
+                "resources": await crud.fertilizer.get_resources(
+                    session, fertilizer.Fertilizers.id, resource_type.FERTILIZER
+                )
+            }
+        )
         responses.append(response)
     return responses
 

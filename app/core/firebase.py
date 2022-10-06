@@ -54,9 +54,13 @@ class FireBase():
                     data=data,
                     notification=messaging.Notification(
                         title=title,
-                        body=body
+                        body=body,
+
                     ),
-                    topic=topic
+                    topic=topic,
+                    apns=messaging.APNSConfig(
+                        payload=messaging.APNSPayload(aps=messaging.Aps(content_available=True))
+                    )
                 )
                 messaging.send(message)
         except Exception as e:
