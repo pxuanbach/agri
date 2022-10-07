@@ -55,11 +55,17 @@ class FireBase():
                     notification=messaging.Notification(
                         title=title,
                         body=body,
-
                     ),
                     topic=topic,
                     apns=messaging.APNSConfig(
                         payload=messaging.APNSPayload(aps=messaging.Aps(content_available=True))
+                    ),
+                    android=messaging.AndroidConfig(
+                        priority="high",
+                        notification=messaging.AndroidNotification(
+                            priority="max", 
+                            # channel_id="high_importance_channel"
+                        )
                     )
                 )
                 messaging.send(message)
