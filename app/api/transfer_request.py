@@ -83,16 +83,35 @@ async def create_transfer_request(
             status_code=404,
             detail="Product not found."
         )
-    if product.updated_by == transfer_request_in.transfer_to_user_id:
-        raise HTTPException(
-            status_code=403,
-            detail="User can not request user's own products."
-        )
-    if product.updated_by != transfer_request_in.transfer_from_user_id:
-        raise HTTPException(
-            status_code=403,
-            detail=f"User with id {transfer_request_in.transfer_from_user_id} does not own this product."
-        )
+
+    buyer = await crud.user.get_user_basic_info_by_id(session, transfer_request_in.transfer_to_user_id)
+    if buyer.created_by:
+        if product.updated_by == buyer.created_by:
+            raise HTTPException(
+                status_code=403,
+                detail="User can not request user's own products."
+            )
+    else:
+        if product.updated_by == transfer_request_in.transfer_to_user_id:
+            raise HTTPException(
+                status_code=403,
+                detail="User can not request user's own products."
+            )
+
+    seller = await crud.user.get_user_basic_info_by_id(session, transfer_request_in.transfer_from_user_id)
+    if seller.created_by:
+        if product.updated_by != seller.created_by:
+            raise HTTPException(
+                status_code=403,
+                detail=f"User by id {transfer_request_in.transfer_from_user_id} does not own this product."
+            )
+    else:
+        if product.updated_by != transfer_request_in.transfer_from_user_id:
+            raise HTTPException(
+                status_code=403,
+                detail=f"User by id {transfer_request_in.transfer_from_user_id} does not own this product."
+            )
+
     check_exist = await crud.product.check_pending_product_status_of_requester(session, product.id, user.id)
     if check_exist:
         raise HTTPException(
@@ -267,9 +286,11 @@ async def update_transfer_request_by_id(
             # Send notification to seller who can't buy
             topics = []
             for request in updated_requests:
+                transfer_user = await crud.user.get_user_basic_info_by_id(session, request.transfer_to_user_id)
+                if transfer_user.created_by:
+                    topics.append(f"user_{transfer_user.created_by}")
                 topics.append(f"user_{request.transfer_to_user_id}")
 
-            # Send notification to seller
             background_tasks.add_task(
                 _firebase.send_to_topics,
                 title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_DENIED,
@@ -284,6 +305,12 @@ async def update_transfer_request_by_id(
             )
             
             # Send notification to seller
+            seller_topics = []
+            transfer_user = await crud.user.get_user_basic_info_by_id(session, transfer_request.transfer_from_user_id)
+            if transfer_user.created_by:
+                seller_topics.append(f"user_{transfer_user.created_by}")
+            seller_topics.append(f"user_{transfer_request.transfer_from_user_id}") 
+            
             background_tasks.add_task(
                 _firebase.send_to_topics,
                 title=msg.YOU_HAVE_ACCEPTED_A_TRANSFER_REQUEST,
@@ -294,11 +321,17 @@ async def update_transfer_request_by_id(
                     "to_user_id": str(transfer_request.transfer_to_user_id), 
                     "from_user_id": str(transfer_request.transfer_from_user_id)
                 },
-                topics=[f"user_{transfer_request.transfer_from_user_id}"],
+                topics=seller_topics,
                 imageUrl=first_image_path,
             )
 
             # Send notification to buyer
+            buyer_topics = []
+            transfer_user = await crud.user.get_user_basic_info_by_id(session, transfer_request.transfer_to_user_id)
+            if transfer_user.created_by:
+                buyer_topics.append(f"user_{transfer_user.created_by}")
+            buyer_topics.append(f"user_{transfer_request.transfer_to_user_id}") 
+
             background_tasks.add_task(
                 _firebase.send_to_topics,
                 title=msg.YOUR_TRANSFER_REQUEST_HAVE_BEEN_ACCEPTED,
@@ -309,7 +342,7 @@ async def update_transfer_request_by_id(
                     "to_user_id": str(transfer_request.transfer_to_user_id), 
                     "from_user_id": str(transfer_request.transfer_from_user_id)
                 },
-                topics=[f"user_{transfer_request.transfer_to_user_id}"],
+                topics=buyer_topics,
                 imageUrl=first_image_path,
             )
 
@@ -326,6 +359,18 @@ async def update_transfer_request_by_id(
                 await crud.product.update_product_status(session, product.id, product_status=product_transfer_status.NORMAL ,updated_by=transfer_request.transfer_from_user_id)
 
             # Send notification to seller and buyer
+            topics = []
+            transfer_user = await crud.user.get_user_basic_info_by_id(session, transfer_request.transfer_to_user_id)
+            if transfer_user.created_by:
+                topics.append(f"user_{transfer_user.created_by}")
+
+            transfer_user = await crud.user.get_user_basic_info_by_id(session, transfer_request.transfer_from_user_id)
+            if transfer_user.created_by:
+                topics.append(f"user_{transfer_user.created_by}")
+
+            topics.append(f"user_{transfer_request.transfer_to_user_id}") 
+            topics.append(f"user_{transfer_request.transfer_from_user_id}") 
+
             background_tasks.add_task(
                 _firebase.send_to_topics,
                 title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_CANCELED,
@@ -336,7 +381,7 @@ async def update_transfer_request_by_id(
                     "to_user_id": str(transfer_request.transfer_to_user_id), 
                     "from_user_id": str(transfer_request.transfer_from_user_id)
                 },
-                topics=[f"user_{transfer_request.transfer_from_user_id}", f"user_{transfer_request.transfer_to_user_id}"],
+                topics=topics,
                 imageUrl=first_image_path,
             )
 

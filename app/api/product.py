@@ -69,12 +69,26 @@ async def get_list_products_history(
     Get list products
     """
     total = await crud.product_history.total_product_histories_by_product(session, request_params)
-    history = await crud.product_history.list_product_histories_by_product(session, request_params)
+    histories = await crud.product_history.list_product_histories_by_product(session, request_params)
+
+    responses = []
+    for history in histories:
+        response = {**history}
+        if history.buyer_created_by is not None:
+            response.update({"buyer_parent": await crud.user.get_user_basic_info_by_id(session, history.buyer_created_by)})
+        else: 
+            response.update({"buyer_parent": None})
+        if history.seller_created_by is not None:
+            response.update({"seller_parent": await crud.user.get_user_basic_info_by_id(session, history.seller_created_by)})
+        else: 
+            response.update({"seller_parent": None})
+
+        responses.append(response)
     return ResponsePagination(
         page_total=math.ceil(total/ request_params.limit),
         page_size=request_params.limit,
         page=request_params.skip / request_params.limit + 1,
-        data=history,
+        data=responses,
     )
 
 @router.post(

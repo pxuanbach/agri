@@ -59,6 +59,7 @@ class CRUDProductHistory(CRUDBase[ProductHistory, ProductHistoryCreate, ProductH
         query = await self.add_filter_to_list_product_histories(query, request_params)
         total = await db.scalar(query)
         return total
+
     async def list_product_histories_by_product(self, db: AsyncSession, request_params
     ) -> Any:
         buyer = aliased(User, name='buyer')
@@ -71,11 +72,13 @@ class CRUDProductHistory(CRUDBase[ProductHistory, ProductHistoryCreate, ProductH
                     buyer.email.label('buyer_email'),
                     buyer.dob.label('buyer_dob'),
                     buyer.avatar_id.label('buyer_avatar_id'),
+                    buyer.created_by.label('buyer_created_by'),
                     seller.name.label('seller_name'),
                     seller.address.label('seller_address'),
                     seller.email.label('seller_email'),
                     seller.dob.label('seller_dob'),
                     seller.avatar_id.label('seller_avatar_id'),
+                    seller.created_by.label('seller_created_by'),
                 )
                 .offset(request_params.skip)
                 .limit(request_params.limit)

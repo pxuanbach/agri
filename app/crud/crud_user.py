@@ -196,4 +196,22 @@ class CRUDUser(CRUDBase[User,UserCreate,UserUpdate]
         user = result.scalars().first()
         return user
 
+    async def get_user_basic_info_by_id(
+        self, db: AsyncSession, user_id: uuid
+    )->Any:
+        result = await db.execute(
+            select(
+                User.name,
+                User.email,
+                User.address,
+                User.dob,
+                User.avatar_id,
+                User.created_by
+            )
+            .filter(User.id == user_id)
+            .filter(User.is_active == True)
+            )
+        user = result.first()
+        return user
+
 user = CRUDUser(User)

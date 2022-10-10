@@ -99,7 +99,7 @@ class CRUDProduct(CRUDBase[Products, ProductCreate, ProductUpdate]):
                     )
                 )
             )
-        query = await self.add_filter_to_product_query(request_params, query)
+        query = await self.add_filter_to_product_query(db, request_params, query)
         total = await db.scalar(query)
         return total
 
@@ -116,7 +116,6 @@ class CRUDProduct(CRUDBase[Products, ProductCreate, ProductUpdate]):
             .offset(request_params.skip)
             .limit(request_params.limit)
             .order_by(request_params.order_by)
-            .filter(User.id == Products.updated_by)
             .outerjoin(ProductTransferStatus, and_(
                 Products.id == ProductTransferStatus.product_id,
                 ProductTransferStatus.updated_by == user_id
@@ -126,11 +125,11 @@ class CRUDProduct(CRUDBase[Products, ProductCreate, ProductUpdate]):
             .group_by(ProductTransferStatus.id)
             .group_by(User.id)
             )
-        query = await self.add_filter_to_product_query(request_params, query)
+        query = await self.add_filter_to_product_query(db, request_params, query)
         products = (await db.execute(query)).all()
         return products
 
-    async def add_filter_to_product_query(self, request_params, query
+    async def add_filter_to_product_query(self, db: AsyncSession, request_params, query
     )-> Any:
         if request_params.search:
             query = query.filter(
@@ -140,9 +139,27 @@ class CRUDProduct(CRUDBase[Products, ProductCreate, ProductUpdate]):
                 )
             )
         if request_params.user_id:
-            query = query.filter(
-                User.id == request_params.user_id
-            )
+            user = (
+                await db.execute(
+                    select(
+                        User.id,
+                        User.created_by,
+                        )
+                    .filter(User.id == request_params.user_id)
+                )
+            ).first()
+            if user.created_by is None:
+                query = query.filter(User.id == Products.updated_by)
+                query = query.filter(
+                    User.id == request_params.user_id
+                )
+            else:
+                query = query.filter(user.created_by == Products.updated_by)
+                query = query.filter(
+                    User.id == user.created_by
+                )
+        else:
+            query = query.filter(User.id == Products.updated_by)
         if request_params.farm_id:
             query = query.filter(
                 Products.farm_id == request_params.farm_id
@@ -279,19 +296,40 @@ class CRUDProduct(CRUDBase[Products, ProductCreate, ProductUpdate]):
     async def update_product_status(
         self, db: AsyncSession, product_id: uuid.UUID, **kwargs
     )->Any:
-        status = await self.get_product_transfer_status(db, product_id, kwargs.get("updated_by"))
+        updated_by = kwargs.get("updated_by")
+        user = (await db.execute(
+                select(User)
+                .filter(User.id == updated_by)
+            )
+        ).scalars().first()
+        if user.created_by != None:
+            status = await self.get_product_transfer_status(db, product_id, user.created_by)
+            if not status:
+                product_transfer_status = ProductTransferStatus(
+                    id = uuid.uuid4(),
+                    product_id = product_id,
+                    transfer_status = kwargs.get("product_status"),
+                    updated_by = user.created_by
+                )
+                db.add(product_transfer_status)
+            else:
+                status.transfer_status = kwargs.get("product_status")
+                db.add(status)
+
+        status = await self.get_product_transfer_status(db, product_id, updated_by)
         if not status:
             product_transfer_status = ProductTransferStatus(
                 id = uuid.uuid4(),
                 product_id = product_id,
                 transfer_status = kwargs.get("product_status"),
-                updated_by = kwargs.get("updated_by")
+                updated_by = updated_by
             )
             db.add(product_transfer_status)
         else:
             status.transfer_status = kwargs.get("product_status")
             db.add(status)
-        await db.commit()
+        await db.commit()  
+
 
     async def update_products_status(
         self, db: AsyncSession, product_id: uuid.UUID, **kwargs
@@ -318,8 +356,17 @@ class CRUDProduct(CRUDBase[Products, ProductCreate, ProductUpdate]):
     async def update_product_owner(
         self, db: AsyncSession, db_obj: Products, **kwargs
     )->Any:
+        updated_by = kwargs.get("updated_by")
+        user = (await db.execute(
+                select(User)
+                .filter(User.id == updated_by)
+            )
+        ).scalars().first()
+        if user.created_by:
+            updated_by = user.created_by
+
         db_obj.updated_at = datetime.utcnow()
-        db_obj.updated_by = kwargs.get("updated_by")
+        db_obj.updated_by = updated_by
         db.add(db_obj)
         await db.commit()
         return db_obj
