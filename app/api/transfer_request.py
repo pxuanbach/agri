@@ -112,7 +112,7 @@ async def create_transfer_request(
                 detail=f"User by id {transfer_request_in.transfer_from_user_id} does not own this product."
             )
 
-    check_exist = await crud.product.check_pending_product_status_of_requester(session, product.id, user.id)
+    check_exist = await crud.product.check_pending_product_status_of_requester(session, product.id, transfer_request_in.transfer_to_user_id)
     if check_exist:
         raise HTTPException(
             status_code=403,
@@ -120,7 +120,7 @@ async def create_transfer_request(
         )
     status_id = await crud.transfer_request.get_status(session, transfer_status.PENDING)
     transfer_request = await crud.transfer_request.create(
-        session, transfer_request_in, status_id=status_id, updated_by=user.id
+        session, transfer_request_in, status_id=status_id, updated_by=transfer_request_in.transfer_to_user_id
     )
     # Update product status of owner
     await crud.product.update_product_status(
