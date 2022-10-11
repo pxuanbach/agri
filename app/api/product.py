@@ -97,7 +97,6 @@ async def get_list_products_history(
 
     return ResponsePagination(
         page_total=page_total,
-        page_total=math.ceil(total/ request_params.limit),
         page_size=request_params.limit,
         page=request_params.skip / request_params.limit + 1,
         data=responses,
