@@ -48,15 +48,14 @@ async def get_list_transfer_request(
     """
     total = await crud.transfer_request.total_transfer_requests_by_product(session, request_params)
     transfer_request = await crud.transfer_request.list_transfer_requests_by_product(session, request_params)
+
     if not transfer_request:
-        return ResponsePagination(
-            page_total=1,
-            page_size=request_params.limit,
-            page=request_params.skip / request_params.limit + 1,
-            data=transfer_request,
-        )
+        page_total = 1
+    else:
+        page_total = math.ceil(total/ request_params.limit)
+
     return ResponsePagination(
-        page_total=math.ceil(total/ request_params.limit),
+        page_total=page_total,
         page_size=request_params.limit,
         page=request_params.skip / request_params.limit + 1,
         data=transfer_request,
@@ -298,6 +297,7 @@ async def update_transfer_request_by_id(
                 data={
                     "event": "denied_transfer_request", 
                     "product_id": str(product.id), 
+                    "to_user_id": str(transfer_request.transfer_to_user_id), 
                     "from_user_id": str(transfer_request.transfer_from_user_id)
                 },
                 topics=topics,
@@ -361,6 +361,13 @@ async def update_transfer_request_by_id(
             # Send notification to seller and buyer
             buyer_topics = []
             transfer_user = await crud.user.get_user_basic_info_by_id(session, transfer_request.transfer_to_user_id)
+            if user.id != transfer_user.created_by and user.id != transfer_user.id:
+                buyer_title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_DENIED
+                buyer_body=f"Sản phẩm {product.name} đã bị từ chối"
+            else:
+                buyer_title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_CANCELED
+                buyer_body=f"Yêu cầu tới sản phẩm {product.name} đã được hủy"
+
             if transfer_user.created_by:
                 buyer_topics.append(f"user_{transfer_user.created_by}")
             buyer_topics.append(f"user_{transfer_request.transfer_to_user_id}") 
@@ -372,10 +379,9 @@ async def update_transfer_request_by_id(
             seller_topics.append(f"user_{transfer_request.transfer_from_user_id}") 
             
             
-
             background_tasks.add_task(
                 _firebase.send_to_topics,
-                title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_CANCELED,
+                title=msg.YOU_HAVE_DENIED_A_TRANSFER_REQUEST,
                 body=f"Yêu cầu tới sản phẩm {product.name} đã được hủy",
                 data={
                     "event": "denied_transfer_request", 
@@ -389,11 +395,12 @@ async def update_transfer_request_by_id(
 
             background_tasks.add_task(
                 _firebase.send_to_topics,
-                title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_DENIED,
-                body=f"Sản phẩm {product.name} đã bị từ chối",
+                title=buyer_title,
+                body=buyer_body,
                 data={
                     "event": "denied_transfer_request", 
                     "product_id": str(product.id), 
+                    "to_user_id": str(transfer_request.transfer_to_user_id), 
                     "from_user_id": str(transfer_request.transfer_from_user_id)
                 },
                 topics=buyer_topics,

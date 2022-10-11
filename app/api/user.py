@@ -49,15 +49,14 @@ async def list_sub_users(
     """
     total = await crud.user.total_sub_user(session, user.id, request_params)
     users = await crud.user.get_sub_customers(session, user.id, request_params)
+
     if not users:
-        return ResponsePagination(
-            page_total=1,
-            page_size=request_params.limit,
-            page=request_params.skip / request_params.limit + 1,
-            data=users,
-        )
+        page_total = 1
+    else:
+        page_total = math.ceil(total/ request_params.limit)
+
     return ResponsePagination(
-        page_total=math.ceil(total/ request_params.limit),
+        page_total=page_total,
         page_size=request_params.limit,
         page=request_params.skip / request_params.limit + 1,
         data=users,
@@ -78,18 +77,25 @@ async def search_users(
     """
     total = await crud.user.total_user(session, request_params)
     users = await crud.user.search_user(session, request_params)
-    if not users:
-        return ResponsePagination(
-            page_total=1,
-            page_size=request_params.limit,
-            page=request_params.skip / request_params.limit + 1,
-            data=users,
-        )
+    responses = []
+    for user in users:
+        response = {**user}
+        if user.created_by is not None:
+            response.update({"parent": await crud.user.get_user_basic_info_by_id(session, user.created_by)})
+        else: 
+            response.update({"parent": None})
+        responses.append(response)
+
+    if not responses:
+        page_total = 1
+    else:
+        page_total = math.ceil(total/ request_params.limit)
+
     return ResponsePagination(
-        page_total=math.ceil(total/ request_params.limit),
+        page_total=page_total,
         page_size=request_params.limit,
         page=request_params.skip / request_params.limit + 1,
-        data=users,
+        data=responses,
     )
 
 @router.get(
@@ -104,7 +110,12 @@ async def get_user_by_id(
     get user detail by id
     """
     user_detail = await crud.user.get_user_detail_by_id(session, user_id)
-    return user_detail
+    response = {**user_detail}
+    if user_detail.created_by is not None:
+        response.update({"parent": await crud.user.get_user_basic_info_by_id(session, user_detail.created_by)})
+    else: 
+        response.update({"parent": None})
+    return response
 
 @router.get(
     "/me",
@@ -118,7 +129,12 @@ async def get_me_user(
     get your user detail
     """
     user_detail = await crud.user.get_user_detail_by_id(session, user.id)
-    return user_detail
+    response = {**user_detail}
+    if user_detail.created_by is not None:
+        response.update({"parent": await crud.user.get_user_basic_info_by_id(session, user_detail.created_by)})
+    else: 
+        response.update({"parent": None})
+    return response
 
 @router.post(
     "",
