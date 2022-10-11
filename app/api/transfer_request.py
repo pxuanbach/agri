@@ -359,17 +359,19 @@ async def update_transfer_request_by_id(
                 await crud.product.update_product_status(session, product.id, product_status=product_transfer_status.NORMAL ,updated_by=transfer_request.transfer_from_user_id)
 
             # Send notification to seller and buyer
-            topics = []
+            buyer_topics = []
             transfer_user = await crud.user.get_user_basic_info_by_id(session, transfer_request.transfer_to_user_id)
             if transfer_user.created_by:
-                topics.append(f"user_{transfer_user.created_by}")
+                buyer_topics.append(f"user_{transfer_user.created_by}")
+            buyer_topics.append(f"user_{transfer_request.transfer_to_user_id}") 
 
+            seller_topics = []
             transfer_user = await crud.user.get_user_basic_info_by_id(session, transfer_request.transfer_from_user_id)
             if transfer_user.created_by:
-                topics.append(f"user_{transfer_user.created_by}")
-
-            topics.append(f"user_{transfer_request.transfer_to_user_id}") 
-            topics.append(f"user_{transfer_request.transfer_from_user_id}") 
+                seller_topics.append(f"user_{transfer_user.created_by}")
+            seller_topics.append(f"user_{transfer_request.transfer_from_user_id}") 
+            
+            
 
             background_tasks.add_task(
                 _firebase.send_to_topics,
@@ -381,7 +383,20 @@ async def update_transfer_request_by_id(
                     "to_user_id": str(transfer_request.transfer_to_user_id), 
                     "from_user_id": str(transfer_request.transfer_from_user_id)
                 },
-                topics=topics,
+                topics=seller_topics,
+                imageUrl=first_image_path,
+            )
+
+            background_tasks.add_task(
+                _firebase.send_to_topics,
+                title=msg.A_TRANSFER_REQUEST_HAVE_BEEN_DENIED,
+                body=f"Sản phẩm {product.name} đã bị từ chối",
+                data={
+                    "event": "denied_transfer_request", 
+                    "product_id": str(product.id), 
+                    "from_user_id": str(transfer_request.transfer_from_user_id)
+                },
+                topics=buyer_topics,
                 imageUrl=first_image_path,
             )
 
