@@ -69,13 +69,13 @@ class NormalAuthentication(AuthenticationBackend):
         # unsubscribe from firebase
         try:
             topics = get_topics_by_role(user)
-            if user.firebase_register_token:
+            if user.firebase_register_token is not None:
                 _firebase.unsubscribe(
                     tokens=[user.firebase_register_token], 
                     topics=topics
                 )
-        except:
-            pass
+        except Exception as e:
+            print("ERROR", str(e))
         # Remove firebase token
         db = SessionLocal()
         user_info = db.get(UserModel, user.id)

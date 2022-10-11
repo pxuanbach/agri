@@ -24,6 +24,7 @@ class FireBase():
         """
             Multiple tokens unsubscribe multiple topics
         """
+        print("unsubscribe", kwargs)
         tokens = kwargs.get("tokens", [])
         topics = kwargs.get("topics", [])
         try:
