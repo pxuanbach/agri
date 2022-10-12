@@ -201,6 +201,7 @@ class CRUDUser(CRUDBase[User,UserCreate,UserUpdate]
     )->Any:
         result = await db.execute(
             select(
+                User.id,
                 User.name,
                 User.email,
                 User.address,
