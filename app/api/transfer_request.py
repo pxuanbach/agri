@@ -99,7 +99,7 @@ async def create_transfer_request(
 
     seller = await crud.user.get_user_basic_info_by_id(session, transfer_request_in.transfer_from_user_id)
     if seller.created_by:
-        if product.updated_by != seller.created_by:
+        if product.updated_by != seller.created_by and product.updated_by != seller.id:
             raise HTTPException(
                 status_code=403,
                 detail=f"User by id {transfer_request_in.transfer_from_user_id} does not own this product."
