@@ -144,6 +144,7 @@ async def create_sub_user(
     email: str,
     name: str,
     password: str,
+    address: Optional[str] = None,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(AuthorizeCurrentUser(role_authen.roles_all)),
 ):
@@ -163,7 +164,8 @@ async def create_sub_user(
             status_code=401,
             detail="User do not have permission.",
         )
-    new_user = await crud.user.create_sub_customers(session, user.id, user.role_id, name, email, password)
+    new_user = await crud.user.create_sub_customers(session, user.id, user.role_id, name, email, address, password)
+
     return new_user
 
 @router.post(

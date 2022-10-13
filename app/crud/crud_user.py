@@ -1,5 +1,7 @@
+from re import A
 from typing import Any
 import uuid
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import or_, func
@@ -14,7 +16,7 @@ class CRUDUser(CRUDBase[User,UserCreate,UserUpdate]
 ):
 
     async def create_sub_customers(
-        self, db: AsyncSession, my_user_id: uuid.UUID, role_id: uuid.UUID, name: str, email: str, password: str
+        self, db: AsyncSession, my_user_id: uuid.UUID, role_id: uuid.UUID, name: str, email: str, address: str, password: str,
     ) -> User:
         user_manager = next(get_user_manager())
         new_user = User(
@@ -23,10 +25,17 @@ class CRUDUser(CRUDBase[User,UserCreate,UserUpdate]
             role_id = role_id,
             name = name,
             email = email,
+            address = address,
             hashed_password = user_manager.password_helper.hash(password),
         )
-        db.add(new_user)
-        await db.commit()
+        try:
+            db.add(new_user)
+            await db.commit()
+        except Exception as e:
+            raise HTTPException(
+                status_code=400,
+                detail="Email have already existed",
+            )
         return new_user
 
     async def total_user(
